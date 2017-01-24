@@ -1,0 +1,24 @@
+.navbar{
+	position:static;
+	width:100%;
+}
+.navbar ul {
+	list-style-type:none;
+}
+
+.content{
+	width:90%;
+	margin:auto;
+}
+
+
+@media screen and (min-width:480px){
+	.navbar{
+		
+	}
+
+	.content{
+		width:65%;
+	}
+}
+
