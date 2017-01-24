@@ -4,6 +4,11 @@
 }
 .navbar ul {
 	list-style-type:none;
+	margin:auto;
+	width:auto;
+}
+.navbar ul li{
+	display:inline-block;
 }
 
 .content{
