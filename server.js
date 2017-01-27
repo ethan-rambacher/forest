@@ -23,7 +23,7 @@ app.use((request, response, next) => {
 
 app.get('/', (request, response) => {
 	console.log(request.url)
-	response.send("hello world")
+	response.send("hello greg")
 })
 
 
