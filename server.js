@@ -22,9 +22,29 @@ app.use((request, response, next) => {
 
 
 app.get('/', (request, response) => {
-	console.log(request.url)
-	response.send("hello greg")
+	console.log("HELLO WORLD")
+	//console.log(request.url)
+	response.sendfile("index.html")
 })
+
+app.get('/events.html', (request, response) => {
+	console.log("HELLO WORLD2")
+	//console.log(request.url)
+	response.sendfile("events.html")
+})
+
+app.get('/create.html', (request, response) => {
+	console.log("HELLO WORLD3")
+	//console.log(request.url)
+	response.sendfile("create.html")
+})
+
+app.get('/index.html', (request, response) => {
+	console.log("HELLO WORLD4")
+	//console.log(request.url)
+	response.sendfile("index.html")
+})
+
 
 
 app.listen(port, (err) => {
