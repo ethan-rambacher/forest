@@ -23,6 +23,8 @@
 }
 .navbar ul li:hover, .active-link {
 	background-color:6B9B0B;
+	transition: background-color .2s;
+	-webkit-transition: background-color .2s;
 }
 .navbar ul li a{
 	padding:.5em 1.25em;
@@ -63,4 +65,18 @@ body {
 
 .container {
 	width:100%;
+}
+
+.button {
+	background-color:#CE591D;
+	padding:0.5em;
+	border-radius:5%;
+	color:white;
+	font-size:1.25em;
+	text-decoration: none;
+}
+.button:hover{
+	background-color:#A7400C;
+	transition: background-color .2s;
+	-webkit-transition: background-color .2s;
 }
