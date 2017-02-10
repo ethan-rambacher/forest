@@ -80,3 +80,14 @@ body {
 	transition: background-color .2s;
 	-webkit-transition: background-color .2s;
 }
+
+.hero {
+	width:100%;
+	background-color:#4F7600;
+	height:40vh;
+	padding:15%;
+}
+
+.fixed_height {
+	height:30vh;
+}
