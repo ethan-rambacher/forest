@@ -1,6 +1,7 @@
 #include <iostream>
 #include <vector>
 #include <cmath>
+#include <string>
 
 #define PI 3.14159265358979323846264
 
@@ -36,7 +37,7 @@ public:
   }
 
   /* Use 'haversine' formula from movable-type.co.uk */
-  float getDistance(const Coordinate c1) const {
+  float getDistance(Coordinate c1) const {
     float lonRad = lon * PI / 180.0;
     float latRad = lat * PI / 180.0;
     // continue....
@@ -51,9 +52,37 @@ private:
 
 class Event{
 public:
+  Event(int ident, const std::string &t, Coordinate c, int p = -1){
+    id = ident;
+    title = t;
+    location = c;
+    pace = p;
+  }
+  
+  Event(int ident, const std::string &t, float lon, float lat, int p = -1){
+    id = ident;
+    title = t;
+    location = Coordinate(lon,lat);
+    pace = p;
+  }
+
+  int getID() const { return id; }
+  std::string getTitle() const { return title; }
+  Coordinate getLocation() const { return location; }
+  int getPace() const { return pace; }
+
+  /* Retrns string of JSON object corresponding to event */
+  std::string getJSON() const {
+    return "{id:"+std::to_string(id)+",title:'"+title+"',lon:"
+      +std::to_string(location.getLon())+",lat:"+std::to_string(location.getLat())
+      +",pace:"+std::to_string(pace)+"}";
+  }									     
+  
 private:
+  id = ident;
   std::string title;
   Coordinate location;
   int pace;
   
 };
+
