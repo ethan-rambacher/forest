@@ -2,6 +2,7 @@
 #include <vector>
 #include <cmath>
 
+#define PI 3.14159265358979323846264
 
 /* Coordinate is a class to store a geographical location.
 lon is the longitude - north being positive, south being negative.
@@ -34,9 +35,25 @@ public:
     return (int) floor((lat - floor(lat))*100);
   }
 
+  /* Use 'haversine' formula from movable-type.co.uk */
+  float getDistance(const Coordinate c1) const {
+    float lonRad = lon * PI / 180.0;
+    float latRad = lat * PI / 180.0;
+    // continue....
+  }
+
 private:
+  // coordinates are stored in degrees.
   float lon;
   float lat;
 
 };
 
+class Event{
+public:
+private:
+  std::string title;
+  Coordinate location;
+  int pace;
+  
+};
