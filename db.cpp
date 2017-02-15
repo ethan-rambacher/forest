@@ -2,6 +2,7 @@
 #include <vector>
 #include <cmath>
 #include <string>
+#include <unordered_map>
 
 #define PI 3.14159265358979323846264
 
@@ -86,3 +87,25 @@ private:
   
 };
 
+
+/* Adds an event to the unordered hash map, indexed by ID */
+void addEvent(std::string input,std::unordered_map<int,Event>& events){
+  static int ID_count = 0;
+  std::string temp;
+  int index;
+  index = input.find("|");
+  temp = input.substr(0,index);
+  
+}
+
+
+int main(){
+  std::string input;
+  std::unordered_map<int,Event> eventsByID;
+  
+  
+  while(1){
+    std::cin >> input;
+    add_event(input);
+  }
+}
