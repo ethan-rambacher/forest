@@ -2,7 +2,7 @@
 #include <list>
 #include <cmath>
 #include <string>
-//#include <unordered_map>
+#include <unordered_map>
 
 #define PI 3.14159265358979323846264
 
@@ -57,6 +57,18 @@ private:
 
 };
 
+
+/* An Event is an object that contains information pertaining to */
+/* one event - i.e. a unique ID, a title, location, pace, etc. */
+/* The latest JSON representation of an event is the following:
+{
+id: XXX,
+title: XXX,
+lon: XX.XXXXXXX,
+lat: XX.XXXXXXX,
+pace: XX
+}
+ */
 class Event{
 public:
   Event(){
@@ -64,14 +76,14 @@ public:
     title = "NULL";
     pace = -1;
   }
-  Event(int ident, const std::string &t, Coordinate c, int p = -1){
+  Event(int ident, const std::string t, Coordinate c, int p = -1){
     id = ident;
     title = t;
     location = c;
     pace = p;
   }
 
-  Event(int ident, const std::string &t, float lon, float lat, int p = -1){
+  Event(int ident, const std::string t, float lon, float lat, int p = -1){
     id = ident;
     title = t;
     location = Coordinate(lon,lat);
@@ -86,9 +98,9 @@ public:
   /* Retrns string of JSON object corresponding to event */
   std::string getJSON() const {
     //return "{id:"+std::to_string(id)+",title:'"+title+"',lon:"
-      //+std::to_string(location.getLon())+",lat:"+std::to_string(location.getLat())
-      //+",pace:"+std::to_string(pace)+"}"; //calls an error, im going to worry about later
-      return "NULL";
+    //+std::to_string(location.getLon())+",lat:"+std::to_string(location.getLat())
+    //+",pace:"+std::to_string(pace)+"}"; //calls an error, im going to worry about later
+    return "NULL";
   }
 
 private:
@@ -99,13 +111,16 @@ private:
 
 };
 
-class Events{
+
+/* An instance of EventsByLocation is a data structure that */
+/* allows access of an Event by its location */
+class EventsByLocation{
 public:
-  Events(){
+  EventsByLocation(){
     file_name = "default.txt";
     clear();
   }
-  Events(std::string file_name){
+  EventsByLocation(std::string file_name){
     clear();
     //initialize things
   }
@@ -131,6 +146,7 @@ public:
   void clear(){
     for(int i = 0; i < 10; i++){
       for(int j = 0; j < 10; j++){
+	delete *globe[i][j]; // remove data at each pointer to avoid mem leak
         globe[i][j] = NULL; //you need to manually set them to null;
       }
     }
@@ -145,22 +161,42 @@ private:
 
 
 /* Adds an event to the unordered hash map, indexed by ID */
-/*void addEvent(std::string input,std::unordered_map<int,Event>& events){
-  static int ID_count = 0;
+/*
+The standard for incoming event information is the following:
+
+title|longitude|latitude|pace
+
+ */
+void addEvent(std::string input,std::unordered_map<int,Event>& events){
+  static int ID_count = 0; // increments each time this function is called; creates unique ID for each Event
+  int ID = ID_count++;
   std::string temp;
   int index;
+  int index2;
   index = input.find("|");
-  temp = input.substr(0,index);
+  std::string title = input.substr(0,index);
+  index2 = input.find("|",index);
+  float longitude = std::stof(input.substr(index,index2));
 
-}*/
+  index = input.find("|",index2);
+  float latitude = std::stof(input.substr(index2,index));
+
+  int pace = std::stoi(input.substr(index,input.size()));
+
+  Event e = Event(ID,title,longitude,latitude,pace);
+  //  events.insert(ID,e);
+  events[ID] = e;
+  // Add code to add to index by location
+}
 
 
 
 int main(){
-  Events e;
+  EventsByLocation e;
   std::string input;
-  //std::unordered_map<int,Event> eventsByID;
+  std::unordered_map<int,Event> eventsByID; // stores hash map of events searchable by ID
 
+  
   //int map[10][10];
   while(1){
     std::cin >> input;
