@@ -97,10 +97,9 @@ public:
 
   /* Retrns string of JSON object corresponding to event */
   std::string getJSON() const {
-    //return "{id:"+std::to_string(id)+",title:'"+title+"',lon:"
-    //+std::to_string(location.getLon())+",lat:"+std::to_string(location.getLat())
-    //+",pace:"+std::to_string(pace)+"}"; //calls an error, im going to worry about later
-    return "NULL";
+    return "{id:"+std::to_string(id)+",title:'"+title+"',lon:"
+    +std::to_string(location.getLon())+",lat:"+std::to_string(location.getLat())
+    +",pace:"+std::to_string(pace)+"}";
   }
 
 private:
@@ -118,7 +117,7 @@ class EventsByLocation{
 public:
   EventsByLocation(){
     file_name = "default.txt";
-    clear();
+    //clear();
   }
   EventsByLocation(std::string file_name){
     clear();
@@ -140,7 +139,7 @@ public:
   void addEvent(Event e){
     Coordinate c = e.getLocation();
     allocate_first_level(c.getFirstLatIndex(), c.getFirstLonIndex());
-    globe[c.getFirstLatIndex()][c.getSecondLonIndex()][c.getSecondLatIndex()][c.getSecondLonIndex()].push_back(e);
+    globe[c.getFirstLatIndex()][c.getFirstLonIndex()][c.getSecondLatIndex()][c.getSecondLonIndex()].push_back(e);
 
   }
   void clear(){
@@ -167,7 +166,7 @@ The standard for incoming event information is the following:
 title|longitude|latitude|pace
 
  */
-void addEvent(std::string input,std::unordered_map<int,Event>& events){
+void addEvent(std::string input,std::unordered_map<int,Event>& eventsID, EventsByLocation& eventsLoc){
   static int ID_count = 0; // increments each time this function is called; creates unique ID for each Event
   int ID = ID_count++;
   std::string temp;
@@ -175,24 +174,33 @@ void addEvent(std::string input,std::unordered_map<int,Event>& events){
   int index2;
   index = input.find("|");
   std::string title = input.substr(0,index);
-  index2 = input.find("|",index);
-  float longitude = std::stof(input.substr(index,index2));
+  //  std::cout << "mark 3-" << title << std::endl;
 
-  index = input.find("|",index2);
-  float latitude = std::stof(input.substr(index2,index));
+  
+  index2 = input.find("|",index+1);
+  float longitude = std::stof(input.substr(index+1,index2-index-1));
 
-  int pace = std::stoi(input.substr(index,input.size()));
+  index = input.find("|",index2+1);
+  float latitude = std::stof(input.substr(index2+1,index-index2-1));
 
+  int pace = std::stoi(input.substr(index+1,input.size()-index-1));
+
+  // Create event and add it to hash map by ID
+
+  std::cout << "Event: " << title << " at " << longitude << "," << latitude << " and " << pace << std::endl;
+  
   Event e = Event(ID,title,longitude,latitude,pace);
-  //  events.insert(ID,e);
-  events[ID] = e;
+  eventsID[ID] = e;
   // Add code to add to index by location
+  eventsLoc.addEvent(e);
+  
+  std::cout << "Event added: " << e.getJSON() << std::endl;
 }
 
 
 
 int main(){
-  EventsByLocation e;
+  EventsByLocation eventsByLoc;
   std::string input;
   std::unordered_map<int,Event> eventsByID; // stores hash map of events searchable by ID
 
@@ -200,6 +208,6 @@ int main(){
   //int map[10][10];
   while(1){
     std::cin >> input;
-    //addEvent(input);
+    addEvent(input,eventsByID,eventsByLoc);
   }
 }
