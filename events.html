@@ -2,6 +2,18 @@
 	<head>
 		<title>Find Events</title>
 		<link rel="stylesheet" href="styles/base.css">
+		<script type="text/javascript">
+		function query(str){
+			var request = new XMLHttpRequest();
+			request.onreadystatechange = function() {
+				if (this.readyState == 4 && this.status == 200){
+					document.getElementByID("status").innerHTML=htmlFromJSON(this.responseText);
+				}
+			};
+			request.open("GET",str,true);
+			request.send();
+		}
+		</script>
 	</head>
 	<body>
 		<div id="navbar" class="navbar">

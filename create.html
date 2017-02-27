@@ -2,6 +2,12 @@
 	<head>
 		<title>Create an Event</title>
 		<link rel="stylesheet" href="styles/base.css">
+
+		<script type="text/javascript">
+		function submitEvent(str){
+
+		}
+		</script>
 	</head>
 	<body>
 		<div id="navbar" class="navbar">
@@ -14,7 +20,16 @@
 		<div id="content" class="content">
 			<h1>Create an Event</h1>
 			<p>Simply fill out the form here:</p>
-			<p>Bacon ipsum dolor amet leberkas pig tri-tip beef ribs landjaeger ball tip tail sirloin fatback meatball. Shoulder pork meatball pastrami pork belly sausage bresaola turducken ball tip spare ribs short ribs. Picanha ground round sausage biltong shoulder. Ham hock doner burgdoggen shank turkey meatloaf pork chop bresaola sausage shoulder swine corned beef frankfurter pastrami.</p>
+			<div id="create" class="content">
+				<form id="search">
+					Longitude:<input type="text" name="long"><br />
+					Latitude:<input type="text" name="lat"><br />
+					<input type="submit" name="submit"></form>
+				</form>
+			</div>
+			<div id="status" class="content">
+				Submitting...
+			</div>
 		</div>
 	</body>
 </html>
