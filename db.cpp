@@ -50,11 +50,59 @@ public:
     return lonRad*latRad; //I got tired of the error
   }
 
+  void operator=(const Coordinate& c){
+    lon = c.getLon();
+    lat = c.getLat();
+  }
+
 private:
   // coordinates are stored in degrees.
   float lon;
   float lat;
+};
 
+/* A Date is an object representing a specific day, month, year, */
+/* and time from 00:00 to 23:59, down to the minute (not second) */
+class Date{
+public:
+  Date(){ // set default values to 1/1/2017 00:00
+    y = 2017;
+    m = d = 1;
+    hr = min = 0;
+  }
+  
+  Date(int year, int month, int day, int hour, int minute){
+    y = year;
+    m = month;
+    d = day;
+    hr = hour;
+    min = minute;
+  }
+  int getYear() const{ return y; }
+  int getMonth() const{ return m; }
+  int getDay() const{ return d; }
+  int getHour() const{ return hr; }
+  int getMinute() const{ return min; }
+
+  std::string toString() const{
+    return std::to_string(y)+"/"+std::to_string(m)+"/"+std::to_string(d)
+      +"|"+std::to_string(hr)+":"+std::to_string(min);
+  }
+
+  void operator=(const Date& date){
+    y = date.getYear();
+    m = date.getMonth();
+    d = date.getDay();
+    hr = date.getHour();
+    min = date.getMinute();
+  }
+
+private:
+  int y;
+  int m;
+  int d;
+  int hr;
+  int min;
 };
 
 
@@ -66,7 +114,9 @@ id: XXX,
 title: XXX,
 lon: XX.XXXXXXX,
 lat: XX.XXXXXXX,
-pace: XX
+pace: XX,
+distance: XX,
+date: XXXX
 }
  */
 class Event{
@@ -83,11 +133,14 @@ public:
     pace = p;
   }
 
-  Event(int ident, const std::string t, float lon, float lat, int p = -1){
+  Event(int ident, const std::string t, float lon, float lat, Date da, int p = -1,
+	int di=-1){
     id = ident;
     title = t;
     location = Coordinate(lon,lat);
     pace = p;
+    distance = di;
+    date = da;
   }
 
   int getID() const { return id; }
@@ -97,9 +150,10 @@ public:
 
   /* Retrns string of JSON object corresponding to event */
   std::string getJSON() const {
-    return "{id:"+std::to_string(id)+",title:'"+title+"',lon:"
-    +std::to_string(location.getLon())+",lat:"+std::to_string(location.getLat())
-    +",pace:"+std::to_string(pace)+"}";
+    return "{id:"+std::to_string(id)+",title:'"+title+"',lon:"+
+      std::to_string(location.getLon())+",lat:"+std::to_string(location.getLat())+
+      ",pace:"+std::to_string(pace)+",distance:"+std::to_string(distance)+
+      ",date:"+date.toString()+"}";
   }
 
 private:
@@ -107,7 +161,8 @@ private:
   std::string title;
   Coordinate location;
   int pace;
-
+  int distance;
+  Date date;
 };
 
 
@@ -158,12 +213,41 @@ private:
 
 };
 
+/* Parses a string of the format:
+YYYY/MM/DD|HH:MM
+into a Date, and returns the corresponding Date object
+*/
+Date parseDate(std::string & dateString){
+  int index1 = dateString.find("/");
+
+  int y = std::stoi(dateString.substr(0,index1)); // year
+
+  int index2 = dateString.find("/",index1+1);
+  int m = std::stoi(dateString.substr(index1,index2-index1-1)); // month
+
+  index1 = dateString.find("|");
+  int d = std::stoi(dateString.substr(index2,index1-index2-1)); // day
+
+  index2 = dateString.find(":");
+  int hr = std::stoi(dateString.substr(index1,index2-index1-1)); // hour
+
+  int min = std::stoi(dateString.substr(index2, dateString.size()-index2-1)); // minute
+
+  std::cout << "mark 1: " <<y<<","<<m<<","<<d<<","<<hr<<","<<min<<std::endl;
+  return Date(y,m,d,hr,min);
+
+}
+
 
 /* Adds an event to the unordered hash map, indexed by ID */
 /*
 The standard for incoming event information is the following:
 
-title|longitude|latitude|pace
+title|longitude|latitude|pace|distance|date
+
+The date format is of the following form:
+
+YYYY/MM/DD|HH:MM
 
  */
 void addEvent(std::string input,std::unordered_map<int,Event>& eventsID, EventsByLocation& eventsLoc){
@@ -183,13 +267,21 @@ void addEvent(std::string input,std::unordered_map<int,Event>& eventsID, EventsB
   index = input.find("|",index2+1);
   float latitude = std::stof(input.substr(index2+1,index-index2-1));
 
-  int pace = std::stoi(input.substr(index+1,input.size()-index-1));
+  index2 = input.find("|",index+1);
+  int pace = std::stoi(input.substr(index+1,index2-index-1));
+  
+  index = input.find("|",index2+1);
+  int distance = std::stoi(input.substr(index2+1,input.size()-index2-1));
 
+  std::string dateString = input.substr(index+1,input.size()-index-1);
+
+  Date date = parseDate(dateString);
+  
   // Create event and add it to hash map by ID
 
   std::cout << "Event: " << title << " at " << longitude << "," << latitude << " and " << pace << std::endl;
   
-  Event e = Event(ID,title,longitude,latitude,pace);
+  Event e = Event(ID,title,longitude,latitude,date,pace,distance);
   eventsID[ID] = e;
   // Add code to add to index by location
   eventsLoc.addEvent(e);
@@ -207,6 +299,8 @@ int main(){
   
   //int map[10][10];
   while(1){
+    // NOTE: input string MAY NOT contain any spaces (' ') or parsing WILL fail
+    // input string is of form: title|longitude|latitude|pace|distance|date
     std::cin >> input;
     addEvent(input,eventsByID,eventsByLoc);
   }
