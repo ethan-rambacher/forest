@@ -218,22 +218,28 @@ YYYY/MM/DD|HH:MM
 into a Date, and returns the corresponding Date object
 */
 Date parseDate(std::string & dateString){
+  std::cout << "mark 1: called parseDate" << std::endl;
   int index1 = dateString.find("/");
 
   int y = std::stoi(dateString.substr(0,index1)); // year
 
+  std::cout << "mark 1.1: year="<<y<<std::endl;
   int index2 = dateString.find("/",index1+1);
-  int m = std::stoi(dateString.substr(index1,index2-index1-1)); // month
+  int m = std::stoi(dateString.substr(index1+1,index2-index1-1)); // month
 
+  std::cout << "mark 1.2: month="<<m<<std::endl;
+  
   index1 = dateString.find("|");
-  int d = std::stoi(dateString.substr(index2,index1-index2-1)); // day
+  int d = std::stoi(dateString.substr(index2+1,index1-index2-1)); // day
 
+  std::cout << "mark 1.3: day="<<d<<std::endl;
+  
   index2 = dateString.find(":");
-  int hr = std::stoi(dateString.substr(index1,index2-index1-1)); // hour
+  int hr = std::stoi(dateString.substr(index1+1,index2-index1-1)); // hour
 
-  int min = std::stoi(dateString.substr(index2, dateString.size()-index2-1)); // minute
+  int min = std::stoi(dateString.substr(index2+1, dateString.size()-index2-1)); // minute
 
-  std::cout << "mark 1: " <<y<<","<<m<<","<<d<<","<<hr<<","<<min<<std::endl;
+  std::cout << "mark 2: " <<y<<","<<m<<","<<d<<","<<hr<<","<<min<<std::endl;
   return Date(y,m,d,hr,min);
 
 }
@@ -269,12 +275,18 @@ void addEvent(std::string input,std::unordered_map<int,Event>& eventsID, EventsB
 
   index2 = input.find("|",index+1);
   int pace = std::stoi(input.substr(index+1,index2-index-1));
+
+  std::cout << "mark 0: found pace" << std::endl;
+
   
   index = input.find("|",index2+1);
   int distance = std::stoi(input.substr(index2+1,input.size()-index2-1));
 
+  std::cout << "mark 0.5: found distance="<<distance << std::endl;
+  
   std::string dateString = input.substr(index+1,input.size()-index-1);
 
+  std::cout << "mark 0.6: found datestring='"<<dateString<<"'"<<std::endl;
   Date date = parseDate(dateString);
   
   // Create event and add it to hash map by ID
