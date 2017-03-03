@@ -44,6 +44,9 @@ app.get('/styles/home.css', (request,response) => {
 	response.sendfile("styles/home.css");
 })
 
+app.get('/scripts/scripts.js', (request,response) => {
+	response.sendfile("scripts/scripts.js");
+})
 
 app.listen(port, (err) => {
 	if (err){
