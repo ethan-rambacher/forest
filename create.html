@@ -5,7 +5,23 @@
 
 		<script type="text/javascript">
 		function submitEvent(str){
+			alert("Sending stuff!");
+			var request = new XMLHttpRequest();
+			request.onreadystatechange = function(){
+				if (this.readyState == 4 && this.status == 200) {
+					document.getElementByID("status").innerHTML = "Event created!";
+				}
+			}
+			request.open("GET",str,true);
+			request.send();
+			document.getElementByID("status").innerHTML = "Submitting event...";
+		}
 
+		function createEvent(){ // driver function for submitEvent
+			lat = document.getElementByID('latitude').value;
+			lon = document.getElementByID('longitude').value;
+			eventstring = "MyRun|"+longitude+"|"+latitude+"|1|1|2017/1/2|12:30";
+			submitEvent(eventstring);
 		}
 		</script>
 	</head>
@@ -22,14 +38,12 @@
 			<p>Simply fill out the form here:</p>
 			<div id="create" class="content">
 				<form id="search">
-					Longitude:<input type="text" name="long"><br />
-					Latitude:<input type="text" name="lat"><br />
-					<input type="submit" name="submit"></form>
+					Longitude:<input id="longitude" type="text" name="long"><br />
+					Latitude:<input id="latitude" type="text" name="lat"><br />
 				</form>
+				<a href="javascript:createEvent()">Submit</a>
 			</div>
-			<div id="status" class="content">
-				Submitting...
-			</div>
+			<div id="status" class="content"></div>
 		</div>
 	</body>
 </html>
