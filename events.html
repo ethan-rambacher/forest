@@ -2,18 +2,7 @@
 	<head>
 		<title>Find Events</title>
 		<link rel="stylesheet" href="styles/base.css">
-		<script type="text/javascript">
-		function query(str){
-			var request = new XMLHttpRequest();
-			request.onreadystatechange = function() {
-				if (this.readyState == 4 && this.status == 200){
-					document.getElementByID("status").innerHTML=htmlFromJSON(this.responseText);
-				}
-			};
-			request.open("GET",str,true);
-			request.send();
-		}
-		</script>
+		<script src="scripts/scripts.js"></script>
 	</head>
 	<body>
 		<div id="navbar" class="navbar">
@@ -28,8 +17,7 @@
 			<p>Search for events here:</p>
 			<div id="events" class="content">
 				<form id="search">
-					Longitude:<input type="text" name="long"><br />
-					Latitude:<input type="text" name="lat"><br />
+					ID:<input type="text" name="id"><br />
 				</form>
 			</div>
 		</div>
