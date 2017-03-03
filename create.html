@@ -5,22 +5,21 @@
 
 		<script type="text/javascript">
 		function submitEvent(str){
-			alert("Sending stuff!");
 			var request = new XMLHttpRequest();
 			request.onreadystatechange = function(){
 				if (this.readyState == 4 && this.status == 200) {
-					document.getElementByID("status").innerHTML = "Event created!";
+					document.getElementByID("submit").innerHTML = "Event created!";
 				}
 			}
 			request.open("GET",str,true);
 			request.send();
-			document.getElementByID("status").innerHTML = "Submitting event...";
+			document.getElementById("submit").innerHTML = "Submitting event...";
 		}
 
 		function createEvent(){ // driver function for submitEvent
-			lat = document.getElementByID('latitude').value;
-			lon = document.getElementByID('longitude').value;
-			eventstring = "MyRun|"+longitude+"|"+latitude+"|1|1|2017/1/2|12:30";
+			lat = document.getElementById('latitude').value;
+			lon = document.getElementById('longitude').value;
+			eventstring = "MyRun|"+lon+"|"+lat+"|1|1|2017/1/2|12:30";
 			submitEvent(eventstring);
 		}
 		</script>
@@ -41,7 +40,8 @@
 					Longitude:<input id="longitude" type="text" name="long"><br />
 					Latitude:<input id="latitude" type="text" name="lat"><br />
 				</form>
-				<a href="javascript:createEvent()">Submit</a>
+				<br />
+				<a id="submit" href="javascript:createEvent()" class="button">Submit</a>
 			</div>
 			<div id="status" class="content"></div>
 		</div>

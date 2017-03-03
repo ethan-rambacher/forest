@@ -15,25 +15,35 @@ app.set('view engine', '.hbs')
 app.set('views', path.join(__dirname, 'views'))
 
 app.use((request, response, next) => {
-	console.log(request.headers)
+	console.log(request.headers);
+	console.log(request.url);
 	next()
 })
 
 app.get('/', (request, response) => {
-	response.sendfile("index.html")
+	response.sendfile("index.html");
 })
 
 app.get('/events.html', (request, response) => {
-	response.sendfile("events.html")
+	response.sendfile("events.html");
 })
 
 app.get('/create.html', (request, response) => {
-	response.sendfile("create.html")
+	response.sendfile("create.html");
 })
 
 app.get('/index.html', (request, response) => {
-	response.sendfile("index.html")
+	response.sendfile("index.html");
 })
+
+app.get('/styles/base.css', (request,response) => {
+	response.sendfile("styles/base.css");
+})
+
+app.get('/styles/home.css', (request,response) => {
+	response.sendfile("styles/home.css");
+})
+
 
 app.listen(port, (err) => {
 	if (err){
